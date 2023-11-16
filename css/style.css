@@ -162,7 +162,8 @@
 
 html {
   font-size: 62.5%;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 @font-face {
@@ -182,6 +183,8 @@ img{
 body {
   display: flex;
   height: inherit;
+  width: inherit;
+  color: #030303;
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
@@ -211,10 +214,6 @@ h3 {
   width: 50%;
   height: 5%;
   font-size: 4rem;
-}
-
-:root {
-  --accent: darkgreen;
 }
 
 button {
@@ -247,10 +246,10 @@ button {
 }
 
 button:hover {
-  border: 1px solid var(--accent);
+  border: 1px solid darkgreen;
   outline-color: rgba(255, 255, 255, 0);
   outline-offset: 15px;
-  color: var(--accent);
+  color: darkgreen;
 }
 
 
@@ -264,11 +263,6 @@ ul {
 /******************************************
 /* ADDITIONAL STYLES
 /*******************************************/
-:root {
-  --primary: #030303;
-  --secondary: #6F7E8C;
-  --text: #212121;
-}
 
 .search {
   position: relative;
@@ -281,7 +275,7 @@ ul {
   font-family: sans-serif;
   font-size: 24px;
   color: transparent;
-  border: 1px solid var(--primary);
+  border: 1px solid #030303;
   transition: width 300ms, background-position 300ms;
   overflow: hidden;
   background: url(../img/ball.svg) no-repeat transparent;
@@ -291,7 +285,7 @@ ul {
 
 .search:hover {
   cursor: pointer;
-  border: 1px solid var(--primary);
+  border: 1px solid #030303;
   background: url(../img/ball.svg) no-repeat transparent;
   background-size: 60px;
   background-position: 45% 50%;
@@ -301,11 +295,11 @@ ul {
   max-width: 300px;
   width: 100%;
   cursor: text;
-  color: var(--primary);
+  color: #030303;
   padding-left: 75px;
   outline: none;
   transition: width 500ms, background-position 300ms;
-  border: 1px solid var(--primary);
+  border: 1px solid #030303;
   background-color: transparent;
   background: url(../img/ball.svg) no-repeat;
   background-size: 60px;
@@ -334,12 +328,5 @@ ul {
   body {
     overflow: auto;
     flex-wrap: nowrap;
-  }
-}
-
-@media all and (min-width: 576px) {
-  body {
-    margin: 0 20%;
-
   }
 }
