@@ -27,15 +27,12 @@ class GuessingGame {
   getPokemon() {
     // Get a random pokemon based on id number
     const number = this.random();
-    console.log(this.history);
-    console.log(number);
     const url = `https://pokeapi.co/api/v2/pokemon/${number}`;
 
     fetch(url)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
         this.pokemon = data.name;
-        console.log(this.pokemon);
         // Capitalize word
         const letters = this.pokemon.split('');
         letters[0] = letters[0].toUpperCase();
@@ -68,7 +65,7 @@ class GuessingGame {
       this.correct = true;
       this.score++;
       this.displayScore();
-      console.log('score: ', this.score);
+ 
       document.querySelector('h3').setAttribute('hidden', true);
       document.querySelector('h2').removeAttribute('hidden');
       document.querySelector('h2').innerText = this.capitalized;
@@ -80,7 +77,7 @@ class GuessingGame {
       document.querySelector('input').value = '';
       this.outs--;
       this.displayScore();
-      console.log('outs: ', this.outs);
+      
 
       if( this.isOver() ) {
         this.highScore = this.score;
