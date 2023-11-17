@@ -88,6 +88,7 @@ class GuessingGame {
           document.querySelector('img').alt = `An image of a Pokemon in a soccer stadium.`;
         }
 
+        document.querySelector('img').style.filter = 'grayscale(100%) brightness(0)';
         this.displayChoices();
       })
       .catch(err => {
@@ -224,6 +225,10 @@ class GuessingGame {
     }
   }
 
+  reveal() {
+    document.querySelector('img').style.filter = '';
+  }
+
 }
 const game = new GuessingGame();
 game.setup();
@@ -236,7 +241,9 @@ for ( let i = 0; i < 4; i++ ) {
     if (game.outs > 0) {
       game.checkWin(name);
 
-      if (game.correct === true) game.showPokemon();
+      if (game.correct === true) game.reveal();
+
+      setTimeout(() => game.showPokemon() , 2000)
     }
   });
 }
