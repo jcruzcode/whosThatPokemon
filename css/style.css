@@ -179,8 +179,7 @@ img{
   margin: 5% auto 0 auto;
   width: 20%;
   height: 20%;
-  -webkit-filter: grayscale(100%) brightness(0);
-  filter: grayscale(100%) brightness(0);
+
   opacity: 0.6;
   
 }
