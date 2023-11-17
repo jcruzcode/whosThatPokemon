@@ -168,7 +168,7 @@ html {
 
 @font-face {
   font-family: 'Pokemon';
-  src: url('../fonts/Pokemon-Hollow.ttf') format('truetype');
+  src: url('../fonts/Pokemon-Solid.ttf') format('truetype');
 }
 
 /******************************************
@@ -177,7 +177,12 @@ html {
 img{
   display: block;
   margin: 5% auto 0 auto;
-  max-width: 50%;
+  width: 20%;
+  height: 20%;
+  -webkit-filter: grayscale(100%) brightness(0);
+  filter: grayscale(100%) brightness(0);
+  opacity: 0.6;
+  
 }
 
 body {
@@ -191,6 +196,7 @@ body {
   font-family: 'Pokemon';
   background: url('../img/pokemon-stadium.jpg') 50% 50% no-repeat;
   font-size: 2rem;
+  font-weight: bold;
   margin: 0 auto;
   text-align: center;
 }
@@ -205,18 +211,22 @@ a {
   font-size: 8rem;
 }
 
-h2 {
-  font-size: 5rem;
+h1 {
+  font-size: 3.5rem;
+}
+
+h2, h4 {
+  font-size: 3rem;
 }
 
 h3 {
   display: block;
   width: 50%;
   height: 5%;
-  font-size: 4rem;
+  font-size: 2.5rem;
 }
 
-button {
+.but, button {
   border: 0px solid;
   border-radius: 25px;
   background: transparent;
@@ -245,21 +255,46 @@ button {
   );
 }
 
-button:hover {
+.but:hover {
   border: 1px solid darkgreen;
   outline-color: rgba(255, 255, 255, 0);
   outline-offset: 15px;
   color: darkgreen;
 }
 
-
-ul {
+.roll-in-left {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
   list-style-type: none;
   font-size: 3rem;
   font-weight: bold;
 }
 
+.roll-in-left > li {
+  margin: 2%;
+}
 
+div {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 20%;
+  width: 100%;
+  margin: 3% 0;
+}
+
+div > button {
+  text-transform: none;
+  padding: 1% 0 3% 0;
+  margin: 2% 2%;
+  letter-spacing: normal;
+  text-align: center;
+  width: 50%;
+  height: 25%;
+}
 /******************************************
 /* ADDITIONAL STYLES
 /*******************************************/
@@ -328,5 +363,14 @@ ul {
   body {
     overflow: auto;
     flex-wrap: nowrap;
+  }
+
+  div {
+    flex-flow: column nowrap;
+  }
+  
+  div > button {
+    width: 50%;
+    height: 25%;
   }
 }
