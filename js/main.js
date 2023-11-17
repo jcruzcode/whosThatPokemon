@@ -7,24 +7,57 @@ class GuessingGame {
     this.capitalized = '';
     this.score = 0;
     this.highScore = 0;
-    this.outs = 5; // Incorrect attempts remaining
+    this.outs = 2; // Incorrect attempts remaining
     this.correct = false;
     this.history = [];
     this.displayScore();
+    this.choices = [];
+    this.pokemonNames = [
+      "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon",
+      "Charizard", "Squirtle", "Wartortle", "Blastoise", "Caterpie",
+      "Metapod", "Butterfree", "Weedle", "Kakuna", "Beedrill", "Pidgey",
+      "Pidgeotto", "Pidgeot", "Rattata", "Raticate", "Spearow", "Fearow",
+      "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash",
+      "Nidoran♀", "Nidorina", "Nidoqueen", "Nidoran♂", "Nidorino",
+      "Nidoking", "Clefairy", "Clefable", "Vulpix", "Ninetales",
+      "Jigglypuff", "Wigglytuff", "Zubat", "Golbat", "Oddish", "Gloom",
+      "Vileplume", "Paras", "Parasect", "Venonat", "Venomoth", "Diglett",
+      "Dugtrio", "Meowth", "Persian", "Psyduck", "Golduck", "Mankey",
+      "Primeape", "Growlithe", "Arcanine", "Poliwag", "Poliwhirl",
+      "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop", "Machoke",
+      "Machamp", "Bellsprout", "Weepinbell", "Victreebel", "Tentacool",
+      "Tentacruel", "Geodude", "Graveler", "Golem", "Ponyta", "Rapidash",
+      "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch'd",
+      "Doduo", "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder",
+      "Cloyster", "Gastly", "Haunter", "Gengar", "Onix", "Drowzee",
+      "Hypno", "Krabby", "Kingler", "Voltorb", "Electrode", "Exeggcute",
+      "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan",
+      "Lickitung", "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey",
+      "Tangela", "Kangaskhan", "Horsea", "Seadra", "Goldeen", "Seaking",
+      "Staryu", "Starmie", "Mr. Mime", "Scyther", "Jynx", "Electabuzz",
+      "Magmar", "Pinsir", "Tauros", "Magikarp", "Gyarados", "Lapras",
+      "Ditto", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon",
+      "Omanyte", "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax",
+      "Articuno", "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite",
+      "Mewtwo", "Mew"
+    ];
+    
   }
 
   random() {
     // Generate an id number for a random pokemon
-    const number = Math.ceil(Math.random() * 151);
+    let number = Math.ceil(Math.random() * 151);
 
-    if ( !this.history.includes(number) ) {
-      this.history.push(number); 
-      return number;
+    while ( this.history.includes(number) ) {
+      number = Math.ceil(Math.random() * 151);
     }
+    
+    this.history.push(number);
+    return number;
 
-    return this.random();
   }
-  getPokemon() {
+
+  setup() {
     // Get a random pokemon based on id number
     const number = this.random();
     const url = `https://pokeapi.co/api/v2/pokemon/${number}`;
@@ -32,19 +65,20 @@ class GuessingGame {
     fetch(url)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
+        this.choices = [];
         this.pokemon = data.name;
+        console.log(this.pokemon);
         // Capitalize word
-        const letters = this.pokemon.split('');
-        letters[0] = letters[0].toUpperCase();
+        this.capitalized = this.capitalize(this.pokemon);
+        this.choices.push(this.capitalized);
 
-        const capital = letters.join('');
-        this.capitalized = capital;
-        
         this.getScore();
+
         // Images of pokemon
         const dream = data.sprites.other['dream_world']['front_default'];
         const official = data.sprites.other['official-artwork']['front_default']
-
+        document.querySelector('img').style.visibility = 'visible';
+        
         // Use official image if dream is not present
         if (dream !== null) {
           document.querySelector('img').src = dream;
@@ -53,47 +87,48 @@ class GuessingGame {
           document.querySelector('img').src = official;
           document.querySelector('img').alt = `An image of a Pokemon in a soccer stadium.`;
         }
+
+        this.displayChoices();
       })
       .catch(err => {
         console.log(`error ${err}`)
       });
   }
 
-  checkWin() {
-    const text = document.querySelector('input').value;
+  checkWin(name) {
+    const text = name;
+
     if (text.toLowerCase() === this.pokemon) {
       this.correct = true;
       this.score++;
       this.displayScore();
- 
-      document.querySelector('h3').setAttribute('hidden', true);
-      document.querySelector('h2').removeAttribute('hidden');
-      document.querySelector('h2').innerText = this.capitalized;
-      document.querySelector('input').value = '';
+
+      document.querySelector('h3').setAttribute('hidden', '');
     } else {
       this.correct = false;
       document.querySelector('h3').removeAttribute('hidden');
       document.querySelector('h3').innerText = 'WRONG! Try again.';
-      document.querySelector('input').value = '';
       this.outs--;
       this.displayScore();
-      
 
-      if( this.isOver() ) {
+
+      if (this.isOver()) {
         this.highScore = this.score;
         this.store();
+        document.querySelector('h3').setAttribute('hidden', '');
+        document.querySelector('img').style.visibility = 'hidden';
         document.querySelector('h2').removeAttribute('hidden');
         document.querySelector('h2').innerText = 'GAME OVER.';
-        document.querySelector('h3').removeAttribute('hidden');
-        document.querySelector('h3').innerText = 'Play Again?';
+        document.querySelector('h4').removeAttribute('hidden');
+        document.querySelector('h4').innerText = 'Play Again?';
       }
 
-      
+
     }
   }
 
   isOver() {
-    if ( this.outs === 0 ) {
+    if (this.outs === 0) {
       return true;
     }
 
@@ -101,23 +136,23 @@ class GuessingGame {
   }
 
   reset() {
-    this.pokemon = ''; 
+    this.pokemon = '';
     this.capitalized = '';
     this.history = [];
     this.score = 0;
     this.outs = 3;
 
-    document.querySelector('h3').setAttribute('hidden', true);
+    document.querySelector('h3').setAttribute('hidden', '');
+    document.querySelector('h4').setAttribute('hidden', '');
     this.showPokemon();
   }
 
   showPokemon() {
-    document.querySelector('h2').setAttribute('hidden', true);
-    document.querySelector('.bot').setAttribute('hidden', true);
-    this.getPokemon();
+    document.querySelector('h2').setAttribute('hidden', '');
+    this.setup();
     this.displayScore();
   }
-  
+
   displayScore() {
     document.querySelector('#score').innerText = `Score: ${this.score}`;
     document.querySelector('#outs').innerText = `Lives: ${this.outs}`;
@@ -131,24 +166,77 @@ class GuessingGame {
 
   getScore() {
     const score = localStorage.getItem('highScore');
-    if ( score !== null ) {
-    document.querySelector('#high').innerText = `High Score: ${JSON.parse(score)}`;
+    if (score !== null) {
+      document.querySelector('#high').innerText = `High Score: ${JSON.parse(score)}`;
     }
   }
-}
 
-const game = new GuessingGame();
-game.getPokemon();
+  capitalize(name) {
+    const letters = name.split('');
+    letters[0] = letters[0].toUpperCase();
 
-document.querySelector('h3').addEventListener('click', () => game.reset());
-document.querySelector('input').addEventListener('keypress', function (e) {
-  if (e.key === 'Enter') {
+    const capital = letters.join('');
+    return capital
+  }
+
+  getChoices() {
+    let num = this.random() - 1;
+    let pokemon = this.pokemonNames[num];
+    
+    while ( this.choices.length < 4 ) {
+      if ( pokemon !== this.capitalized )  {
+        this.choices.push(pokemon);
+      }
+      num = this.random() - 1
+      pokemon = this.pokemonNames[num];
+    }
+  }
+
+  randomize() {
+    let arr = [];
+    let choices = [];
+    let num = Math.floor(Math.random() * 4);
   
-    if ( game.outs > 0 ) {
-      game.checkWin();
+    while (arr.length < 4) {
+      if (!arr.includes(num)) {
+        arr.push(num);
+      }
+  
+      num = Math.floor(Math.random() * 4)
+    }
+    
+    for ( let i = 0; i < this.choices.length; i++ ) {
+      choices[arr[i]] = this.choices[i];
+    }
 
-      if (game.correct === true ) game.showPokemon();
+    this.choices = choices;
+  }
+
+  displayChoices() {
+    const buttons = document.querySelectorAll('button');
+    
+    this.getChoices();
+    this.randomize();
+
+    for ( let i = 0; i < buttons.length; i++ ) {
+      document.querySelector(`#btn${i}`).removeAttribute('hidden');
+      document.querySelector(`#btn${i}`).innerText  = this.choices[i];
     }
   }
 
-});
+}
+const game = new GuessingGame();
+game.setup();
+
+document.querySelector('h4').addEventListener('click', () => game.reset());
+
+for ( let i = 0; i < 4; i++ ) {
+  document.querySelector(`#btn${i}`).addEventListener('click', () => {
+    let name = document.querySelector(`#btn${i}`).innerText;
+    if (game.outs > 0) {
+      game.checkWin(name);
+
+      if (game.correct === true) game.showPokemon();
+    }
+  });
+}
