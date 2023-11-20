@@ -7,7 +7,7 @@ class GuessingGame {
     this.capitalized = '';
     this.score = 0;
     this.highScore = 0;
-    this.outs = 2; // Incorrect attempts remaining
+    this.outs = 3; // Incorrect attempts remaining
     this.correct = false;
     this.history = [];
     this.displayScore();
@@ -52,7 +52,6 @@ class GuessingGame {
       number = Math.ceil(Math.random() * 151);
     }
     
-    this.history.push(number);
     return number;
 
   }
@@ -61,6 +60,7 @@ class GuessingGame {
     // Get a random pokemon based on id number
     const number = this.random();
     const url = `https://pokeapi.co/api/v2/pokemon/${number}`;
+    this.history.push(number);
 
     fetch(url)
       .then(res => res.json()) // parse response as JSON
@@ -68,6 +68,7 @@ class GuessingGame {
         this.choices = [];
         this.pokemon = data.name;
         console.log(this.pokemon);
+        console.log(this.history);
         // Capitalize word
         this.capitalized = this.capitalize(this.pokemon);
         this.choices.push(this.capitalized);
@@ -103,6 +104,11 @@ class GuessingGame {
       this.correct = true;
       this.score++;
       this.displayScore();
+
+      if ( this.score > this.highScore ) {
+        this.highScore = this.score;
+        this.store();
+      }
 
       document.querySelector('h3').setAttribute('hidden', '');
     } else {
@@ -241,9 +247,10 @@ for ( let i = 0; i < 4; i++ ) {
     if (game.outs > 0) {
       game.checkWin(name);
 
-      if (game.correct === true) game.reveal();
-
-      setTimeout(() => game.showPokemon() , 2000)
+      if (game.correct === true) {
+        game.reveal();
+        setTimeout(() => game.showPokemon() , 2000);
+      }
     }
   });
 }
